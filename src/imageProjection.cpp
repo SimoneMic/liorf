@@ -114,15 +114,15 @@ public:
         subImu = create_subscription<sensor_msgs::msg::Imu>(imuTopic, rclcpp::SensorDataQoS(), 
                     std::bind(&ImageProjection::imuHandler, this, std::placeholders::_1));
 
-        subOdom = create_subscription<nav_msgs::msg::Odometry>(odomTopic+"_incremental", QosPolicy(history_policy, reliability_policy),
+        subOdom = create_subscription<nav_msgs::msg::Odometry>(odomTopic+"_incremental", 10,
                     std::bind(&ImageProjection::odometryHandler, this, std::placeholders::_1));
 
         subLaserCloud = create_subscription<sensor_msgs::msg::PointCloud2>(pointCloudTopic, rclcpp::SensorDataQoS(), 
                     std::bind(&ImageProjection::cloudHandler, this, std::placeholders::_1));
 
-        pubExtractedCloud = create_publisher<sensor_msgs::msg::PointCloud2>( "liorf/deskew/cloud_deskewed", QosPolicy(history_policy, reliability_policy));
+        pubExtractedCloud = create_publisher<sensor_msgs::msg::PointCloud2>( "liorf/deskew/cloud_deskewed", 10);
 
-        pubLaserCloudInfo = create_publisher<liorf::msg::CloudInfo>("liorf/deskew/cloud_info", QosPolicy(history_policy, reliability_policy));
+        pubLaserCloudInfo = create_publisher<liorf::msg::CloudInfo>("liorf/deskew/cloud_info", 10);
 
         allocateMemory();
         resetParameters();
@@ -312,7 +312,7 @@ public:
             if (ringFlag == -1)
             {
                 RCLCPP_ERROR_STREAM(get_logger(), "Point cloud ring channel not available, please configure your point cloud data!");
-                rclcpp::shutdown();
+                return false;
             }
         }
 

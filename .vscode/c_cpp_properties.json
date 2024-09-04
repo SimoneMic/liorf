@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/home/ecub_docker/ros2_workspace/install/**",
+                "/opt/ros/humble/**",
+                "/usr/include/pcl-1.12/**",
+                "/usr/include/eigen3/**",
+                "/usr/include/opencv4/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}

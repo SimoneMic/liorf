@@ -167,26 +167,26 @@ public:
         parameters.relinearizeSkip = 1;
         isam = new ISAM2(parameters);
 
-        subCloud = create_subscription<liorf::msg::CloudInfo>("liorf/deskew/cloud_info", QosPolicy(history_policy, reliability_policy),
+        subCloud = create_subscription<liorf::msg::CloudInfo>("liorf/deskew/cloud_info", 10,
                     std::bind(&mapOptimization::laserCloudInfoHandler, this, std::placeholders::_1));
-        subGPS = create_subscription<sensor_msgs::msg::NavSatFix>(gpsTopic, QosPolicy(history_policy, reliability_policy),
+        subGPS = create_subscription<sensor_msgs::msg::NavSatFix>(gpsTopic, 10,
                     std::bind(&mapOptimization::gpsHandler, this, std::placeholders::_1));
-        subLoop = create_subscription<std_msgs::msg::Float64MultiArray>("lio_loop/loop_closure_detection", QosPolicy(history_policy, reliability_policy),
+        subLoop = create_subscription<std_msgs::msg::Float64MultiArray>("lio_loop/loop_closure_detection", 10,
                     std::bind(&mapOptimization::loopInfoHandler, this, std::placeholders::_1));
 
-        pubKeyPoses = create_publisher<sensor_msgs::msg::PointCloud2>("liorf/mapping/trajectory", QosPolicy(history_policy, reliability_policy));
-        pubLaserCloudSurround = create_publisher<sensor_msgs::msg::PointCloud2>("liorf/mapping/map_global", QosPolicy(history_policy, reliability_policy));
-        pubLaserOdometryGlobal = create_publisher<nav_msgs::msg::Odometry>("liorf/mapping/odometry", QosPolicy(history_policy, reliability_policy));
-        pubLaserOdometryIncremental = create_publisher<nav_msgs::msg::Odometry>("liorf/mapping/odometry_incremental", QosPolicy(history_policy, reliability_policy));
-        pubPath = create_publisher<nav_msgs::msg::Path>("liorf/mapping/path", QosPolicy(history_policy, reliability_policy));
-        pubHistoryKeyFrames = create_publisher<sensor_msgs::msg::PointCloud2>("liorf/mapping/icp_loop_closure_history_cloud", QosPolicy(history_policy, reliability_policy));
-        pubIcpKeyFrames = create_publisher<sensor_msgs::msg::PointCloud2>("liorf/mapping/icp_loop_closure_corrected_cloud", QosPolicy(history_policy, reliability_policy));
-        pubLoopConstraintEdge = create_publisher<visualization_msgs::msg::MarkerArray>("/liorf/mapping/loop_closure_constraints", QosPolicy(history_policy, reliability_policy));
-        pubRecentKeyFrames = create_publisher<sensor_msgs::msg::PointCloud2>("liorf/mapping/map_local", QosPolicy(history_policy, reliability_policy));
-        pubRecentKeyFrame = create_publisher<sensor_msgs::msg::PointCloud2>("liorf/mapping/cloud_registered", QosPolicy(history_policy, reliability_policy));
-        pubCloudRegisteredRaw = create_publisher<sensor_msgs::msg::PointCloud2>("liorf/mapping/cloud_registered_raw", QosPolicy(history_policy, reliability_policy));
-        pubSLAMInfo = create_publisher<liorf::msg::CloudInfo>("liorf/mapping/slam_info", QosPolicy(history_policy, reliability_policy));
-        pubGpsOdom = create_publisher<nav_msgs::msg::Odometry>("liorf/mapping/gps_odom", QosPolicy(history_policy, reliability_policy));
+        pubKeyPoses = create_publisher<sensor_msgs::msg::PointCloud2>("liorf/mapping/trajectory", 10);
+        pubLaserCloudSurround = create_publisher<sensor_msgs::msg::PointCloud2>("liorf/mapping/map_global", 10);
+        pubLaserOdometryGlobal = create_publisher<nav_msgs::msg::Odometry>("liorf/mapping/odometry", 10);
+        pubLaserOdometryIncremental = create_publisher<nav_msgs::msg::Odometry>("liorf/mapping/odometry_incremental", 10);
+        pubPath = create_publisher<nav_msgs::msg::Path>("liorf/mapping/path", 10);
+        pubHistoryKeyFrames = create_publisher<sensor_msgs::msg::PointCloud2>("liorf/mapping/icp_loop_closure_history_cloud", 10);
+        pubIcpKeyFrames = create_publisher<sensor_msgs::msg::PointCloud2>("liorf/mapping/icp_loop_closure_corrected_cloud", 10);
+        pubLoopConstraintEdge = create_publisher<visualization_msgs::msg::MarkerArray>("/liorf/mapping/loop_closure_constraints", 10);
+        pubRecentKeyFrames = create_publisher<sensor_msgs::msg::PointCloud2>("liorf/mapping/map_local", 10);
+        pubRecentKeyFrame = create_publisher<sensor_msgs::msg::PointCloud2>("liorf/mapping/cloud_registered", 10);
+        pubCloudRegisteredRaw = create_publisher<sensor_msgs::msg::PointCloud2>("liorf/mapping/cloud_registered_raw", 10);
+        pubSLAMInfo = create_publisher<liorf::msg::CloudInfo>("liorf/mapping/slam_info", 10);
+        pubGpsOdom = create_publisher<nav_msgs::msg::Odometry>("liorf/mapping/gps_odom", 10);
 
         srvSaveMap = create_service<liorf::srv::SaveMap>("liorf/save_map", 
                         std::bind(&mapOptimization::saveMapService, this, std::placeholders::_1, std::placeholders::_2 ));

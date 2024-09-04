@@ -65,14 +65,14 @@ public:
             }
         }
 
-        subLaserOdometry = create_subscription<nav_msgs::msg::Odometry>("liorf/mapping/odometry", QosPolicy(history_policy, reliability_policy), 
+        subLaserOdometry = create_subscription<nav_msgs::msg::Odometry>("liorf/mapping/odometry", 10, 
                     std::bind(&TransformFusion::lidarOdometryHandler, this, std::placeholders::_1));
 
-        subImuOdometry = create_subscription<nav_msgs::msg::Odometry>(odomTopic+"_incremental", QosPolicy(history_policy, reliability_policy),
+        subImuOdometry = create_subscription<nav_msgs::msg::Odometry>(odomTopic+"_incremental", 10,
                     std::bind(&TransformFusion::imuOdometryHandler, this, std::placeholders::_1));
 
-        pubImuOdometry = create_publisher<nav_msgs::msg::Odometry>(odomTopic, QosPolicy(history_policy, reliability_policy));
-        pubImuPath = create_publisher<nav_msgs::msg::Path>("liorf/imu/path", QosPolicy(history_policy, reliability_policy));
+        pubImuOdometry = create_publisher<nav_msgs::msg::Odometry>(odomTopic, 10);
+        pubImuPath = create_publisher<nav_msgs::msg::Path>("liorf/imu/path", 10);
     }
 
     Eigen::Affine3f odom2affine(nav_msgs::msg::Odometry odom)
@@ -235,10 +235,10 @@ public:
         subImu = create_subscription<sensor_msgs::msg::Imu>(imuTopic, rclcpp::SensorDataQoS(), 
                     std::bind(&IMUPreintegration::imuHandler, this, std::placeholders::_1));
 
-        subOdometry = create_subscription<nav_msgs::msg::Odometry>("liorf/mapping/odometry_incremental", QosPolicy(history_policy, reliability_policy),
+        subOdometry = create_subscription<nav_msgs::msg::Odometry>("liorf/mapping/odometry_incremental", 10,
                     std::bind(&IMUPreintegration::odometryHandler, this, std::placeholders::_1));
 
-        pubImuOdometry = create_publisher<nav_msgs::msg::Odometry>(odomTopic+"_incremental", QosPolicy(history_policy, reliability_policy));
+        pubImuOdometry = create_publisher<nav_msgs::msg::Odometry>(odomTopic+"_incremental", 10);
 
         boost::shared_ptr<gtsam::PreintegrationParams> p = gtsam::PreintegrationParams::MakeSharedU(imuGravity);
         p->accelerometerCovariance  = gtsam::Matrix33::Identity(3,3) * pow(imuAccNoise, 2); // acc white noise in continuous
