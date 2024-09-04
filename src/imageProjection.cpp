@@ -111,13 +111,13 @@ public:
     ImageProjection(const rclcpp::NodeOptions & options) :
             ParamServer("liorf_imageProjection", options), deskewFlag(0)
     {
-        subImu = create_subscription<sensor_msgs::msg::Imu>(imuTopic, QosPolicy(history_policy, reliability_policy), 
+        subImu = create_subscription<sensor_msgs::msg::Imu>(imuTopic, rclcpp::SensorDataQoS(), 
                     std::bind(&ImageProjection::imuHandler, this, std::placeholders::_1));
 
         subOdom = create_subscription<nav_msgs::msg::Odometry>(odomTopic+"_incremental", QosPolicy(history_policy, reliability_policy),
                     std::bind(&ImageProjection::odometryHandler, this, std::placeholders::_1));
 
-        subLaserCloud = create_subscription<sensor_msgs::msg::PointCloud2>(pointCloudTopic, QosPolicy(history_policy, reliability_policy), 
+        subLaserCloud = create_subscription<sensor_msgs::msg::PointCloud2>(pointCloudTopic, rclcpp::SensorDataQoS(), 
                     std::bind(&ImageProjection::cloudHandler, this, std::placeholders::_1));
 
         pubExtractedCloud = create_publisher<sensor_msgs::msg::PointCloud2>( "liorf/deskew/cloud_deskewed", QosPolicy(history_policy, reliability_policy));
@@ -163,6 +163,7 @@ public:
 
     void imuHandler(const sensor_msgs::msg::Imu::SharedPtr imuMsg)
     {
+        RCLCPP_INFO(get_logger(), "imuHandler");
         sensor_msgs::msg::Imu thisImu = imuConverter(*imuMsg);
 
         std::lock_guard<std::mutex> lock1(imuLock);
@@ -188,18 +189,20 @@ public:
 
     void odometryHandler(const nav_msgs::msg::Odometry::SharedPtr odometryMsg)
     {
+        RCLCPP_INFO(get_logger(), "odometryHandler");
         std::lock_guard<std::mutex> lock2(odoLock);
         odomQueue.push_back(*odometryMsg);
     }
 
     void cloudHandler(const sensor_msgs::msg::PointCloud2::SharedPtr laserCloudMsg)
     {
+        RCLCPP_INFO(get_logger(), "cloudHandler");
         if (!cachePointCloud(laserCloudMsg))
             return;
 
         if (!deskewInfo())
             return;
-
+        
         projectPointCloud();
 
         publishClouds();
