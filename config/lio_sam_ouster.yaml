@@ -1,19 +1,19 @@
 /**:
   ros__parameters:
     # Topics
-    pointCloudTopic: "points_raw"               # Point cloud data
-    imuTopic: "imu_raw"                         # IMU data
+    pointCloudTopic: "ouster/filtered_points"               # Point cloud data
+    imuTopic: "ouster/imu"                         # IMU data
     odomTopic: "odometry/imu"                   # IMU pre-preintegration odometry, same frequency as IMU
     gpsTopic: "odometry/gpsz"                   # GPS odometry topic from navsat, see module_navsat.launch file
 
     # Frames
-    lidarFrame: "base_link"
+    lidarFrame: "os_sensor"
     baselinkFrame: "base_link"
     odometryFrame: "odom"
     mapFrame: "map"
 
     # GPS Settings
-    useImuHeadingInitialization: true           # if using GPS data, set to "true"
+    useImuHeadingInitialization: false           # if using GPS data, set to "true"
     useGpsElevation: false                      # if GPS elevation is bad, set to "false"
     gpsCovThreshold: 2.0                        # m^2, threshold for using GPS data
     poseCovThreshold: 25.0                      # m^2, threshold for using GPS data
@@ -24,12 +24,12 @@
 
     # Sensor Settings
     sensor: ouster                            # lidar sensor type, 'velodyne' or 'ouster' or 'livox' or 'robosense'
-    N_SCAN: 128                                  # number of lidar channel (i.e., Velodyne/Ouster: 16, 32, 64, 128, Livox Horizon: 6)
-    Horizon_SCAN: 1024                          # lidar horizontal resolution (Velodyne:1800, Ouster:512,1024,2048, Livox Horizon: 4000)
+    N_SCAN: 64                                  # number of lidar channel (i.e., Velodyne/Ouster: 16, 32, 64, 128, Livox Horizon: 6)
+    Horizon_SCAN: 512                          # lidar horizontal resolution (Velodyne:1800, Ouster:512,1024,2048, Livox Horizon: 4000)
     downsampleRate: 2                           # default: 1. Downsample your data if too many points(line). i.e., 16 = 64 / 4, 16 = 16 / 1
     point_filter_num: 5                         # default: 3. Downsample your data if too many points(point). e.g., 16: 1, 32: 5, 64: 8
-    lidarMinRange: 1.0                          # default: 1.0, minimum lidar range to be used
-    lidarMaxRange: 1000.0                       # default: 1000.0, maximum lidar range to be used
+    lidarMinRange: 0.3                          # default: 1.0, minimum lidar range to be used
+    lidarMaxRange: 20.0                       # default: 1000.0, maximum lidar range to be used
 
     # IMU Settings
     imuType: 0                                  # 0: 6-axis  1: 9-axis
